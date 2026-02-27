@@ -21,7 +21,8 @@ def main():
         print(cube._eo)
         print("\n"*2)
 
-        print("now we play :")
+        print("possible moves:")
+        print("U, D, L, R, F, B")
         inp = input("write your move: ")
 
         move = moves.get(inp)
