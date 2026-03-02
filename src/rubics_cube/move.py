@@ -1,103 +1,205 @@
-from numpy import (
-    array,
-    zeros, 
-    ndarray, 
-    issubdtype, 
-    integer, 
-    unique,
-    any as np_any,
-)
+from numpy import ndarray, array
 
 class _Move:
     def __init__(
         self,
-        P_cp: ndarray = zeros(4),
-        delta_co: ndarray = zeros(4),
-        P_ep: ndarray = zeros(4),
-        delta_eo: ndarray = zeros(4),
+        notation: str,
+        P_cp: ndarray,
+        delta_co: ndarray,
+        P_ep: ndarray,
+        delta_eo: ndarray,
     ):
+        self.notation = notation
         self.P_cp = P_cp
         self.delta_co = delta_co
         self.P_ep = P_ep
         self.delta_eo = delta_eo
 
-        if not self._validate_move():
-            raise ValueError("Invalid _Move: violates cube rules")
-    
-    def _validate_move(self) -> bool:
-        # types checking
-        for arr in [self.P_cp, self.delta_co, self.P_ep, self.delta_eo]:
-            if not isinstance(arr, ndarray) or not issubdtype(arr.dtype, integer):
-                return False
-        # shape checking
-        for arr in [self.P_cp, self.delta_co, self.P_ep, self.delta_eo]:
-            if arr.shape != (4,):
-                return False
-        
-        # P_cp checking
-        if min(self.P_cp) < 0 or max(self.P_cp) > 7:
-            return False
-        if len(unique(self.P_cp)) != 4:
-            return False
-        
-        # P_ep checking
-        if min(self.P_ep) < 0 or max(self.P_ep) > 11:
-            return False
-        if len(unique(self.P_ep)) != 4:
-            return False
-        
-        # delta_co checking
-        if sum(self.delta_co) % 3 != 0:
-            return False
-        if np_any(self.delta_co < 0) or np_any(self.delta_co > 2):
-            return False
-        
-        # delta_eo checking
-        if sum(self.delta_eo) % 2 != 0:
-            return False
-        if np_any(self.delta_eo < 0) or np_any(self.delta_eo > 1):
-            return False
-        
-        return True
-    
+
 class Moves:
+
+    null_move = _Move(
+        notation="null",
+        P_cp=array([0,1,2,3,4,5,6,7]),
+        delta_co=array([0,0,0,0,0,0,0,0]),
+        P_ep=array([0,1,2,3,4,5,6,7,8,9,10,11]),
+        delta_eo=array([0,0,0,0,0,0,0,0,0,0,0,0]),
+    )
+
     U = _Move(
-        P_cp=array([3, 0, 1, 2]),
-        delta_co=zeros(4, dtype=int),
-        P_ep=array([0, 1, 2, 3]),
-        delta_eo=zeros(4, dtype=int)
+        notation="U",
+        P_cp=array([3,0,1,2,4,5,6,7]),
+        delta_co=array([0,0,0,0,0,0,0,0]),
+        P_ep=array([1,2,3,0,4,5,6,7,8,9,10,11]),
+        delta_eo=array([0,0,0,0,0,0,0,0,0,0,0,0]),
     )
+
+    U_ = _Move(
+        notation="U'",
+        P_cp=array([1,2,3,0,4,5,6,7]),
+        delta_co=array([0,0,0,0,0,0,0,0]),
+        P_ep=array([3,0,1,2,4,5,6,7,8,9,10,11]),
+        delta_eo=array([0,0,0,0,0,0,0,0,0,0,0,0]),
+    )
+
+    U2 = _Move(
+        notation="U2",
+        P_cp=array([2,3,0,1,4,5,6,7]),
+        delta_co=array([0,0,0,0,0,0,0,0]),
+        P_ep=array([2,3,0,1,4,5,6,7,8,9,10,11]),
+        delta_eo=array([0,0,0,0,0,0,0,0,0,0,0,0]),
+    )
+
     D = _Move(
-        P_cp=array([4, 5, 6, 7]),
-        delta_co=zeros(4, dtype=int),
-        P_ep=array([8, 9, 10, 11]),
-        delta_eo=zeros(4, dtype=int)
+        notation="D",
+        P_cp=array([0,1,2,3,5,6,7,4]),
+        delta_co=array([0,0,0,0,0,0,0,0]),
+        P_ep=array([0,1,2,3,4,5,6,7,11,8,9,10]),
+        delta_eo=array([0,0,0,0,0,0,0,0,0,0,0,0]),
     )
-    L = _Move(
-        P_cp=array([0, 7, 4, 3]),
-        delta_co=array([1, 2, 1, 2]),
-        P_ep=array([3, 10, 7, 11]),
-        delta_eo=zeros(4, dtype=int)
+
+    D_ = _Move(
+        notation="D'",
+        P_cp=array([0,1,2,3,7,4,5,6]),
+        delta_co=array([0,0,0,0,0,0,0,0]),
+        P_ep=array([0,1,2,3,4,5,6,7,9,10,11,8]),
+        delta_eo=array([0,0,0,0,0,0,0,0,0,0,0,0]),
     )
+
+    D2 = _Move(
+        notation="D2",
+        P_cp=array([0,1,2,3,6,7,4,5]),
+        delta_co=array([0,0,0,0,0,0,0,0]),
+        P_ep=array([0,1,2,3,4,5,6,7,10,11,8,9]),
+        delta_eo=array([0,0,0,0,0,0,0,0,0,0,0,0]),
+    )
+
     R = _Move(
-        P_cp=array([1, 2, 5, 6]),
-        delta_co=array([1, 2, 1, 2]),
-        P_ep=array([1, 5, 9, 6]),
-        delta_eo=zeros(4, dtype=int)
+        notation="R",
+        P_cp=array([4,1,2,0,7,5,6,3]),
+        delta_co=array([2,0,0,1,1,0,0,2]),
+        P_ep=array([0,4,2,3,9,1,6,7,8,5,10,11]),
+        delta_eo=array([0,0,0,0,0,0,0,0,0,0,0,0]),
     )
+
+    R_ = _Move(
+        notation="R'",
+        P_cp=array([3,1,2,7,0,5,6,4]),
+        delta_co=array([2,0,0,1,1,0,0,2]),
+        P_ep=array([0,5,2,3,1,9,6,7,8,4,10,11]),
+        delta_eo=array([0,0,0,0,0,0,0,0,0,0,0,0]),
+    )
+
+    R2 = _Move(
+        notation="R2",
+        P_cp=array([7,1,2,4,3,5,6,0]),
+        delta_co=array([0,0,0,0,0,0,0,0]),
+        P_ep=array([0,9,2,3,5,4,6,7,8,1,10,11]),
+        delta_eo=array([0,0,0,0,0,0,0,0,0,0,0,0]),
+    )
+
+    L = _Move(
+        notation="L",
+        P_cp=array([0,2,6,3,4,1,5,7]),
+        delta_co=array([0,1,2,0,1,2,0,0]),
+        P_ep=array([0,1,2,6,4,5,11,3,8,9,10,7]),
+        delta_eo=array([0,0,0,0,0,0,0,0,0,0,0,0]),
+    )
+
+    L_ = _Move(
+        notation="L'",
+        P_cp=array([0,5,1,3,4,6,2,7]),
+        delta_co=array([0,1,2,0,1,2,0,0]),
+        P_ep=array([0,1,2,7,4,5,3,11,8,9,10,6]),
+        delta_eo=array([0,0,0,0,0,0,0,0,0,0,0,0]),
+    )
+
+    L2 = _Move(
+        notation="L2",
+        P_cp=array([0,6,5,3,4,2,1,7]),
+        delta_co=array([0,0,0,0,0,0,0,0]),
+        P_ep=array([0,1,2,11,4,5,7,6,8,9,10,3]),
+        delta_eo=array([0,0,0,0,0,0,0,0,0,0,0,0]),
+    )
+
     F = _Move(
-        P_cp=array([0, 1, 6, 7]),
-        delta_co=array([1, 2, 1, 2]),
-        P_ep=array([0, 4, 8, 7]),
-        delta_eo=array([1, 1, 1, 1])
+        notation="F",
+        P_cp=array([1,5,2,3,0,4,6,7]),
+        delta_co=array([1,2,0,0,2,1,0,0]),
+        P_ep=array([7,1,2,3,0,5,6,8,4,9,10,11]),
+        delta_eo=array([1,0,0,0,1,0,0,1,1,0,0,0]),
     )
+
+    F_ = _Move(
+        notation="F'",
+        P_cp=array([4,0,2,3,5,1,6,7]),
+        delta_co=array([1,2,0,0,2,1,0,0]),
+        P_ep=array([4,1,2,3,8,5,6,0,7,9,10,11]),
+        delta_eo=array([1,0,0,0,1,0,0,1,1,0,0,0]),
+    )
+
+    F2 = _Move(
+        notation="F2",
+        P_cp=array([5,4,2,3,1,0,6,7]),
+        delta_co=array([0,0,0,0,0,0,0,0]),
+        P_ep=array([8,1,2,3,7,5,6,4,0,9,10,11]),
+        delta_eo=array([0,0,0,0,0,0,0,0,0,0,0,0]),
+    )
+
     B = _Move(
-        P_cp=array([2, 3, 4, 5]),
-        delta_co=array([1, 2, 1, 2]),
-        P_ep=array([2, 11, 10, 5]),
-        delta_eo=array([1, 1, 1, 1])
+        notation="B",
+        P_cp=array([0,1,3,7,4,5,2,6]),
+        delta_co=array([0,0,1,2,0,0,2,1]),
+        P_ep=array([0,1,5,3,4,10,2,7,8,9,6,11]),
+        delta_eo=array([0,0,1,0,0,1,1,0,0,0,1,0]),
+    )
+
+    B_ = _Move(
+        notation="B'",
+        P_cp=array([0,1,6,2,4,5,7,3]),
+        delta_co=array([0,0,1,2,0,0,2,1]),
+        P_ep=array([0,1,6,3,4,2,10,7,8,9,5,11]),
+        delta_eo=array([0,0,1,0,0,1,1,0,0,0,1,0]),
+    )
+
+    B2 = _Move(
+        notation="B2",
+        P_cp=array([0,1,7,6,4,5,3,2]),
+        delta_co=array([0,0,0,0,0,0,0,0]),
+        P_ep=array([0,1,10,3,4,6,5,7,8,9,2,11]),
+        delta_eo=array([0,0,0,0,0,0,0,0,0,0,0,0]),
     )
 
     @classmethod
-    def all(cls):
-        return [cls.U, cls.D, cls.L, cls.R, cls.F, cls.B]
+    def get_all_moves(cls):
+        return [
+            cls.U,
+            cls.U_,
+            cls.U2,
+            cls.D,
+            cls.D_,
+            cls.D2,
+            cls.R,
+            cls.R_,
+            cls.R2,
+            cls.L,
+            cls.L_,
+            cls.L2,
+            cls.F,
+            cls.F_,
+            cls.F2,
+            cls.B,
+            cls.B_,
+            cls.B2,
+        ]
+
+    @classmethod
+    def get_move_by_notation(cls, notation: str):
+        
+        all_moves = cls.get_all_moves()
+
+        for move in all_moves:
+            if notation == move.notation:
+                return move
+        
+        return None

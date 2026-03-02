@@ -1,35 +1,56 @@
+from numpy import array
+
 from .rubics_cube.main import RK
-from .rubics_cube.move import Moves
+from .rubics_cube.move import Moves, _Move
 
-moves = {
-    "U": Moves.U,
-    "D": Moves.D,
-    "L": Moves.L,
-    "R": Moves.R,
-    "F": Moves.F,
-    "B": Moves.B,
-}
 
-cube = RK()
 def main():
 
+    cube = RK()
+
+    print(cube)
+
     while True:
-        print("present state:")
-        print(cube._cp)
-        print(cube._co)
-        print(cube._ep)
-        print(cube._eo)
-        print("\n"*2)
 
-        print("possible moves:")
-        print("U, D, L, R, F, B")
-        inp = input("write your move: ")
+        notation_input = input("Enter move notation (or 'exit' to quit): ").upper()
 
-        move = moves.get(inp)
+        if notation_input == "exit":
+            break
 
-        if move is None:
-            print("invalid move")
-            continue
+        notations = notation_input.split()
+
+        moves: list[_Move] = []                               # type: ignore
+
+        for notation in notations:
+            tmp_move = Moves.get_move_by_notation(notation)
+
+            if tmp_move is None:
+                print(f"Invalid notation {notation}")
+                continue
+
+            moves.append(tmp_move)
         
+
+        for move in moves:
+            cube.apply_move(move)
+
+        print(cube)
+
+def test_move():
+
+    cube = RK()
+
+    print(cube)
+
+    move = Moves.F
+
+    for _ in range(4):
         cube.apply_move(move)
-        print("\n"*2)
+        print(cube)
+
+
+    
+
+
+
+    
