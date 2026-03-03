@@ -1,6 +1,6 @@
 # RKsolver
 
-![Кубик 3х3х3 с гранями](data\clean_3x3x3_with_6edges_toc.gif)
+[Кубик 3х3х3 с гранями](data\clean_3x3x3_with_6edges_toc.gif)
 
 посмотрим на кубик рубика 3х3х3.
 каждая его грань отмечена буквой.
