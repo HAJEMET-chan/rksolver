@@ -1,12 +1,12 @@
 from numpy import array
 
-from .rubics_cube.main import RK
+from .rubics_cube.main import RС
 from .rubics_cube.move import Moves, _Move
 
 
 def main():
 
-    cube = RK()
+    cube = RС()
 
     print(cube)
 
@@ -38,7 +38,7 @@ def main():
 
 def test_move():
 
-    cube = RK()
+    cube = RС()
 
     print(cube)
 

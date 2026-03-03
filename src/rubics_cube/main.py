@@ -1,10 +1,10 @@
 from __future__ import annotations
-from numpy import array, zeros, roll, ndarray, sum as np_sum
-from math import factorial
+from numpy import array
 
-from .move import _Move, Moves
+from .move import _Move
+from .utils import orientation_to_index, permutation_to_index
 
-class RK:
+class RС:
     def __init__(self):
         self._cp = array([0,1,2,3,4,5,6,7])
         self._co = array([0,0,0,0,0,0,0,0])
@@ -17,27 +17,17 @@ class RK:
         self._ep = self._ep[move.P_ep]
         self._eo = (self._eo[move.P_ep] + move.delta_eo) % 2
     
-    def _permutation_to_index(self, permutation):
-        index = 0
-        for i in range(1, len(permutation)):
-            index += np_sum(permutation[:i]>permutation[i]) * factorial(i)
-        return index
-
-    def _orientation_to_index(self, orientation, base):
-        value = 0
-        for d in orientation:
-            value = value * base + d
-        return value
+    
     
     def __str__(self):
         return (
-            f"corner permutation {self._cp} -> {self._permutation_to_index(self._cp)}\n"
-            f"corner orientation {self._co} -> {self._orientation_to_index(self._co, 3)}\n"
-            f"edge permutation {self._ep} -> {self._permutation_to_index(self._ep)}\n"
-            f"enge orientation {self._eo} -> {self._orientation_to_index(self._eo, 2)}\n"
+            f"corner permutation {self._cp} -> {permutation_to_index(self._cp)}\n"
+            f"corner orientation {self._co} -> {orientation_to_index(self._co, 3)}\n"
+            f"edge permutation {self._ep} -> {permutation_to_index(self._ep)}\n"
+            f"enge orientation {self._eo} -> {orientation_to_index(self._eo, 2)}\n"
         )
     
-    def __eq__(self, other: RK):              # type: ignore
+    def __eq__(self, other: RС):              # type: ignore
         return (
             (self._cp == other._cp).all() and
             (self._co == other._co).all() and
