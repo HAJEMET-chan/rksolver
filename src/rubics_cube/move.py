@@ -192,6 +192,30 @@ class Moves:
             cls.B_,
             cls.B2,
         ]
+    
+    @classmethod
+    def get_all_single_moves(cls, include_reverse: bool = False):
+        return [
+            cls.U,
+            cls.D,
+            cls.R,
+            cls.L,
+            cls.F,
+            cls.B,
+            cls.U_,
+            cls.D_,
+            cls.R_,
+            cls.L_,
+            cls.F_,
+            cls.B_,
+        ] if include_reverse else [
+            cls.U,
+            cls.D,
+            cls.R,
+            cls.L,
+            cls.F,
+            cls.B,
+        ] 
 
     @classmethod
     def get_move_by_notation(cls, notation: str):
@@ -203,3 +227,9 @@ class Moves:
                 return move
         
         return None
+
+    @classmethod
+    def get_random_moves(cls, length: int = 20):
+        import random
+        all_moves = cls.get_all_moves()
+        return random.choices(all_moves, k=length)
